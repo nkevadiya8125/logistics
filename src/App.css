@@ -40,6 +40,6 @@
 .header{
   display: flex;
   list-style: none;
-  gap: 20px;
-  
+  gap: 4rem;
+  font-size: 1.3rem;
 }
