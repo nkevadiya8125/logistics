@@ -1,22 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import img1 from "../assets/Images/cabbaige.jpg"
 import img2 from "../assets/Images/greenchilli.jpg"
 import img3 from "../assets/Images/onion.jpg"
 import img4 from "../assets/Images/lemon.jpg"
 import img5 from "../assets/Images/drumstick.jpg"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios'
 
 function ProductCategories() {
     const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
+    const[products, setProducts]= useState([]);
+    const params = useParams();
+    
+
+
+
+
+    useEffect(()=>{
+        axios.get(`https://67d84aa200348dd3e2a6f5f5.mockapi.io/api/v1/products`)
+        .then((res)=>{
+            const result= res.data
+            const productFilter = result.filter((item, index)=>item.categoryId== params.id)
+            setProducts(productFilter)
+        })
+        .catch((err)=>console.log(err))
+    
+    }, [])
+
+
 
     function handleClick(item) {
         navigate(`/product/${item}`);
     }
 
-    const data = [
+    /*const ProductCategoriesData = [
         {
-            label: "Cabbage",
-            image: img1,
+            label: "name",
+            image: thumbnail,
         },
         {
             label: "Green Chilly",
@@ -34,7 +55,7 @@ function ProductCategories() {
             label: "Drum Stick",
             image: img5,
         },
-    ];
+    ];*/ 
 
     return (
         <div className="product-categories-container" style={{
@@ -60,11 +81,11 @@ function ProductCategories() {
                 gap: "30px",
                 width: "100%"
             }}>
-                {data.map((item, index) => {
+                {products.map((item, index) => {
                     return (
                         <button
                             key={index}
-                            onClick={handleClick}
+                            onClick={()=>handleClick(item.id)}
                             style={{
                                 background: 'none',
                                 border: 'none',
@@ -102,8 +123,8 @@ function ProductCategories() {
                                     position: 'relative'
                                 }}>
                                     <img
-                                        src={item.image}
-                                        alt={item.label}
+                                        src={item.thumbnail}
+                                        alt={item.name}
                                         style={{
                                             width: '100%',
                                             height: '100%',
@@ -128,7 +149,7 @@ function ProductCategories() {
                                     backgroundColor: '#ffffff',
                                     width: '100%'
                                 }}>
-                                    {item.label}
+                                    {item.name}
                                 </p>
                             </div>
                         </button>

@@ -1,54 +1,31 @@
-import React from 'react';
+import React, {  useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, Container, Grid } from '@mui/material';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const Products = () => {
-  const productsList = [
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=512,h=416,fit=crop/ALpJx4OJLjfkLZeZ/food.fruit_.vegetable.basket-640x400-min-AoPeOWPGwqh4Kvaw.jpg',
-      description: 'A vegetable is the edible portion of a plant.',
-      buttonLabel: 'Vegetables'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=514,h=442,fit=crop/ALpJx4OJLjfkLZeZ/gettyimages-1410881808-612x612-AVLJ6y5avkU5r1Xy.jpg',
-      description: 'The fleshy or dry ripened ovary of a flowering plant, enclosing the seed or seeds.',
-      buttonLabel: 'Fruits'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=512,h=416,fit=crop/ALpJx4OJLjfkLZeZ/gettyimages-907613746-612x612-Y4L4NrjLRjSz5KBJ.jpg',
-      description: 'Plant derived substances that add flavor to any dish.',
-      buttonLabel: 'Spices'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=504,h=418,fit=crop/ALpJx4OJLjfkLZeZ/gettyimages-182715123-612x612-YZ92wGw86osxrQ6w.jpg',
-      description: 'The matured coconuts while de-husking, the husk is left intact over the "eyes" of the coconut.',
-      buttonLabel: 'Coconut'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=514,h=432,fit=crop/ALpJx4OJLjfkLZeZ/gettyimages-57474174-612x612-YyvopJbzKrfNjWxw.jpg',
-      description: 'Rich source of vitamins, minerals, carbohydrates, fats, oils, and protein.',
-      buttonLabel: 'Cereals'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=494,h=432,fit=crop/ALpJx4OJLjfkLZeZ/gettyimages-480241244-612x612-AR0Jvwo8V9U0e7Na.jpg',
-      description: 'Flour is a powder made by grinding raw grains, roots, beans, nuts, or seeds.',
-      buttonLabel: 'Powder'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=494,h=432,fit=crop/ALpJx4OJLjfkLZeZ/pulses-AGBGZ5gy9pur3WBm.jpg',
-      description: 'Pulses are the dry, edible seeds of plants in the legume family',
-      buttonLabel: 'Pulses'
-    },
-    {
-      image: 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=494,h=432,fit=crop/ALpJx4OJLjfkLZeZ/istockphoto-1346551687-612x612-Aq2ovRo24gi1XgzL.jpg',
-      description: 'Life is brew-tea-ful with a cup of tea.',
-      buttonLabel: 'Tea'
-    }
-  ];
+  const [products, setProducts] = useState([]);
+  const navigate= useNavigate();
+
+  useEffect(() => {
+    axios.get('https://67d84aa200348dd3e2a6f5f5.mockapi.io/api/v1/product-categories')
+        .then((res)=>setProducts(res.data))
+        .catch((err)=>console.log(err));
+  }, [])
+
+  function handleButtonClick(id){
+    navigate(`product-categories/${id}`)
+    
+
+  }
+
+
 
   return (
       <Box sx={{ py: { xs: 5, md: 8 }, backgroundColor: '#f8f9fa' }}>
@@ -94,7 +71,7 @@ const Products = () => {
           </Box>
 
           <Grid container spacing={3} justifyContent="center">
-            {productsList.map((item, index) => (
+            {products.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <Card
                       sx={{
@@ -114,8 +91,8 @@ const Products = () => {
                     <Box sx={{ position: 'relative', pt: '65%' }}>
                       <CardMedia
                           component="img"
-                          image={item.image}
-                          alt={item.buttonLabel}
+                          image={item.thumbnail}
+                          alt={item.name}
                           sx={{
                             position: 'absolute',
                             top: 0,
@@ -154,6 +131,7 @@ const Products = () => {
                         {item.description}
                       </Typography>
                       <Button
+                      onClick={()=>handleButtonClick(item.id)}
                           variant="outlined"
                           sx={{
                             padding: '10px 24px',
@@ -169,7 +147,7 @@ const Products = () => {
                             }
                           }}
                       >
-                        {item.buttonLabel}
+                        {item.name}
                       </Button>
                     </CardContent>
                   </Card>
